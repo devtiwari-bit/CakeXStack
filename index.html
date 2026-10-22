@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CakeXStack by Ved Games Production | Free Cake Stacking Game</title>
+<meta name="description" content="CakeXStack is a free addictive cake stacking game. Drop the layers, hit perfect streaks, and watch the cats and crows on the city rooftops. By Ved Games Production.">
+<meta name="keywords" content="CakeXStack, cake stack game, stacking game, addictive game, free browser game, Ved Games Production, cat game, casual game">
+<meta name="author" content="Ved Games Production">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#120a2e">
+<meta name="application-name" content="CakeXStack">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CakeXStack">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="canonical" href="https://devtiwari-bit.github.io/CakeXStack/">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ved Games Production">
+<meta property="og:title" content="CakeXStack by Ved Games Production">
+<meta property="og:description" content="Stack the cakes, hit perfect streaks, and watch the cats on the rooftops. Free to play.">
+<meta property="og:url" content="https://devtiwari-bit.github.io/CakeXStack/">
+<meta property="og:image" content="https://devtiwari-bit.github.io/CakeXStack/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CakeXStack by Ved Games Production">
+<meta name="twitter:description" content="Stack the cakes, hit perfect streaks, and watch the cats on the rooftops.">
+<meta name="twitter:image" content="https://devtiwari-bit.github.io/CakeXStack/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"CakeXStack","description":"A free addictive cake stacking game with perfect streaks, city rooftop cats and crows.","genre":"Casual","gamePlatform":"Web Browser","applicationCategory":"Game","operatingSystem":"Any","url":"https://devtiwari-bit.github.io/CakeXStack/","image":"https://devtiwari-bit.github.io/CakeXStack/og-image.png","author":{"@type":"Organization","name":"Ved Games Production"},"publisher":{"@type":"Organization","name":"Ved Games Production"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap">
+<style>
+:root{box-sizing:border-box;color-scheme:dark;--ink:#fff8f2;--accent:#ff6fa5;--gold:#ffd166}
+html,body{margin:0;height:100%;overflow:hidden;background:#120a2e;color:var(--ink);font-family:"Fredoka","Trebuchet MS",system-ui,sans-serif;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+#hud{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 18px);text-align:center;pointer-events:none}
+#score{font-size:72px;font-weight:900;line-height:1;text-shadow:0 6px 24px #000a}
+#combo{height:26px;margin-top:6px;font-size:18px;font-weight:800;color:var(--gold);opacity:0;transition:opacity .2s;text-shadow:0 2px 8px #000a}
+#overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;background:#0a0716b8}
+#overlay.hidden{display:none}
+h1{margin:0;font-size:52px;font-weight:900;letter-spacing:-1px;color:var(--accent)}
+#msg{margin:12px 0 26px;font-size:18px;line-height:1.4;opacity:.92;max-width:300px}
+#best{font-size:16px;color:var(--gold);margin-bottom:18px;min-height:20px}
+button{font:inherit;font-size:22px;font-weight:800;border:0;border-radius:999px;padding:16px 48px;color:#fff;background:var(--accent);box-shadow:0 8px 0 #b33d69,0 14px 30px #000a;cursor:pointer}
+button:active{transform:translateY(4px);box-shadow:0 4px 0 #b33d69,0 8px 20px #000a}
+#brand{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);text-align:center;font-size:12px;font-weight:700;letter-spacing:.5px;color:#fff;opacity:.7;pointer-events:none;text-shadow:0 1px 6px #000a}
+#diffs{display:flex;gap:10px;margin-bottom:22px}
+.dbtn{font-size:16px;padding:10px 18px;background:#ffffff1a;box-shadow:none;border:2px solid #ffffff55;color:#fff8f2}
+.dbtn.on{background:#ff6fa5;border-color:#ff6fa5;box-shadow:0 5px 0 #b33d69}
+
+.emoji{font-size:72px;line-height:1;margin-bottom:6px;animation:bob 1.8s ease-in-out infinite}
+#title{margin:0;font-size:60px;font-weight:700;letter-spacing:-.5px;color:#ff8fb8;white-space:pre;text-shadow:0 4px 0 #b33d69,0 10px 26px #000a}
+#title span{display:inline-block;animation:drop .7s cubic-bezier(.2,1.5,.4,1) both;animation-delay:calc(var(--i) * 70ms + 150ms)}
+#msg{font-weight:500}
+button{animation:pulse 1.8s ease-in-out infinite}
+button:active{animation:none}
+@keyframes bob{50%{transform:translateY(-10px) rotate(-4deg)}}
+@keyframes drop{from{transform:translateY(-70px);opacity:0}to{transform:none;opacity:1}}
+@keyframes pulse{50%{transform:scale(1.05)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<noscript><h1>CakeXStack by Ved Games Production</h1><p>CakeXStack is a free stacking game. Enable JavaScript to play.</p></noscript>
+<canvas id="c"></canvas>
+<div id="brand">by Ved Games Production</div>
+<div id="hud"><div id="score">0</div><div id="combo"></div></div>
+<div id="overlay">
+  <div class="emoji">🎂</div>
+  <h1 id="title" aria-label="CakeXStack"><span style="--i:0">C</span><span style="--i:1">a</span><span style="--i:2">k</span><span style="--i:3">e</span><span style="--i:4">X</span><span style="--i:5">S</span><span style="--i:6">t</span><span style="--i:7">a</span><span style="--i:8">c</span><span style="--i:9">k</span></h1>
+  <p id="msg">Tap to drop each cake layer. Hit 5 perfects in a row and the cakes start getting BIG.</p>
+  <div id="best"></div>
+  <div id="diffs"><button class="dbtn" id="d-easy">Easy</button><button class="dbtn" id="d-normal">Normal</button><button class="dbtn" id="d-hard">Hard</button></div>
+  <button id="go">Play</button>
+</div>
+<script>
+(function () {
+  "use strict";
+  var cv = document.getElementById("c");
+  var ctx = cv.getContext("2d");
+  var $ = function (id) { return document.getElementById(id); };
+  var scoreEl = $("score"), comboEl = $("combo"), overlay = $("overlay");
+  var msgEl = $("msg"), bestEl = $("best"), btn = $("go");
+
+  var PERFECT = 7;
+  var CH = 30, BASE_MAX = 270, BIG_MAX = 340, STREAK = 5;
+  var FROST = ["#ff8fb8", "#9fe8c8", "#ffe27a", "#b7a2ff", "#ffb07a", "#8fd6ff", "#fff3f7"];
+  var SPRINK = ["#ff4d6d", "#4dd2ff", "#ffd60a", "#ffffff", "#7bed9f", "#c77dff"];
+  var SAYS = ["meow?", "nom nom", "I want cake!", "lol", "hi!", "mine now"];
+  var SIGNS = ["CAKE SALE 50%", "NO DIET ZONE", "I <3 SPRINKLES", "CAT CAFE >", "CROWS ARE LANDLORDS"];
+  var BIRD_SAYS = ["caw!", "caw caw", "rude."];
+
+  function R(a, b) { return a + Math.random() * (b - a); }
+  function H01(n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  var W, H, dpr, stack, cur, dir, speed, score, combo, fallers, parts, birds, birdT,
+      bgLayers, state, cam, camT, shake, best, fi, startW, frame, popT, popMsg;
+
+  try { best = +localStorage.getItem("cakerush_best") || 0; } catch (e) { best = 0; }
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  function baseY() { return H * 0.8; }
+  function blockY(i) { return baseY() - i * CH + cam; }
+
+  function layerOf() {
+    fi++;
+    var sp = [];
+    for (var i = 0; i < 6; i++) {
+      sp.push({ x: R(0.08, 0.92), c: pick(SPRINK), a: R(0, Math.PI) });
+    }
+    return { fc: FROST[fi % FROST.length], seed: fi, sp: sp };
+  }
+
+  function rr(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function drawCake(x, y, w, l, big) {
+    var fat = big ? 4 : 0;
+    rr(x, y + 6, w, CH - 6, 6);
+    ctx.fillStyle = "#e9b97c";
+    ctx.fill();
+    ctx.fillStyle = "rgba(255,240,220,.35)";
+    ctx.fillRect(x + 5, y + CH - 12, Math.max(0, w - 10), 3);
+    rr(x - 3, y, w + 6, 11 + fat / 2, 5);
+    ctx.fillStyle = l.fc;
+    ctx.fill();
+    for (var k = 0; k < 4; k++) {
+      var dx = x + 6 + Math.max(0, w - 12) * (k / 3);
+      rr(dx, y + 8, 6, 5 + H01(l.seed + k) * 7 + fat, 3);
+      ctx.fill();
+    }
+    for (var s = 0; s < l.sp.length; s++) {
+      var p = l.sp[s];
+      ctx.save();
+      ctx.translate(x + p.x * w, y + 5);
+      ctx.rotate(p.a);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-3, -1, 6, 2.5);
+      ctx.restore();
+    }
+  }
+
+  // ---------- background ----------
+  function mkB(x, far) {
+    return {
+      x: x,
+      w: far ? R(70, 120) : R(80, 150),
+      top: far ? H * 0.44 + R(-30, 50) : H * 0.74 + R(-20, 20),
+      id: Math.random(),
+      sign: far && Math.random() < 0.3 ? pick(SIGNS) : null,
+      cat: !far && Math.random() < 0.55 ? { t: R(60, 200), act: 0, n: 0, say: "", bo: Math.random() * 400 } : null,
+      person: far && Math.random() < 0.35 ? { row: Math.floor(R(0, 2)), col: Math.floor(R(0, 2)), bo: Math.random() * 400 } : null
+    };
+  }
+
+  function fillLayer(L) {
+    var last = L.list[L.list.length - 1];
+    while (!last || last.x + last.w < W + 60) {
+      var b = mkB(last ? last.x + last.w : -20, L.far);
+      L.list.push(b);
+      last = b;
+    }
+  }
+
+  function initBg() {
+    bgLayers = [
+      { far: true, sp: 0.35, color: "#3b2a68", list: [] },
+      { far: false, sp: 0.7, color: "#1f1640", list: [] }
+    ];
+    fillLayer(bgLayers[0]);
+    fillLayer(bgLayers[1]);
+  }
+
+  // cat acts: 0 sit, 1 jump, 2 dance (sunglasses), 3 sleep (Zzz), 4 bread-loaf stretch
+  var ACT_LEN = [150, 40, 170, 200, 80];
+
+  function catNextAct(cat) {
+    cat.act = Math.floor(Math.random() * 5);
+    cat.n = 0;
+    cat.say = (cat.act === 1 || cat.act === 2) ? pick(SAYS) : "";
+  }
+
+  function drawCat(x, y, cat) {
+    var c = "#120a22";
+    ctx.fillStyle = c;
+    ctx.strokeStyle = c;
+    ctx.save();
+    ctx.translate(x, y);
+    var prog = cat.n / ACT_LEN[cat.act];
+
+    if (cat.act === 1) { // jump
+      ctx.translate(0, -Math.sin(Math.PI * prog) * 34);
+      ctx.rotate(Math.sin(Math.PI * prog) * -0.25);
+    }
+    if (cat.act === 2) { // dance wiggle
+      ctx.rotate(Math.sin(frame * 0.25) * 0.18);
+    }
+    if (cat.act === 4) { // stretch: long and low
+      ctx.scale(1 + Math.sin(prog * Math.PI) * 0.25, 1 - Math.sin(prog * Math.PI) * 0.12);
+    }
+
+    if (cat.act === 3) { // sleeping loaf
+      ctx.beginPath(); ctx.ellipse(0, -5, 14, 6, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(12, -9, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(9, -13); ctx.lineTo(10, -19); ctx.lineTo(13, -14); ctx.fill();
+      ctx.fillStyle = "#ffd166";
+      ctx.fillRect(10, -10, 3, 1);
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 13px Fredoka, Trebuchet MS, sans-serif";
+      var zOff = (frame % 90) / 90;
+      ctx.globalAlpha = 1 - zOff;
+      ctx.fillText("z", 18, -20 - zOff * 16);
+      ctx.fillText("Z", 26, -26 - zOff * 20);
+      ctx.globalAlpha = 1;
+      ctx.restore();
+      return;
+    }
+
+    // body
+    ctx.beginPath(); ctx.ellipse(0, -8, 11, 7, 0, 0, Math.PI * 2); ctx.fill();
+    // head
+    ctx.beginPath(); ctx.arc(10, -16, 6, 0, Math.PI * 2); ctx.fill();
+    // ears
+    ctx.beginPath(); ctx.moveTo(6, -20); ctx.lineTo(7, -27); ctx.lineTo(11, -21); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(11, -21); ctx.lineTo(14, -27); ctx.lineTo(15, -19); ctx.fill();
+    // tail
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-9, -8);
+    ctx.quadraticCurveTo(-22, -14 - (cat.act === 1 ? 10 : 0), -16, -26);
+    ctx.stroke();
+    // eyes (sunglasses when dancing)
+    if (cat.act === 2) {
+      ctx.fillStyle = "#000";
+      ctx.fillRect(7, -18, 10, 4);
+    } else if ((frame + cat.bo) % 200 < 7) {
+      // blink: eyes squeeze shut for a few frames
+      ctx.fillStyle = "#120a22";
+      ctx.fillRect(8, -16, 2.5, 1);
+      ctx.fillRect(12, -16, 2.5, 1);
+    } else {
+      ctx.fillStyle = "#ffd166";
+      ctx.fillRect(8, -17, 2.5, 2.5);
+      ctx.fillRect(12, -17, 2.5, 2.5);
+    }
+    // party hat on some cats
+    if (cat.n % 2 === 0 && cat.act === 2) {
+      ctx.fillStyle = "#ff6fa5";
+      ctx.beginPath(); ctx.moveTo(6, -23); ctx.lineTo(10, -34); ctx.lineTo(14, -23); ctx.fill();
+    }
+    ctx.restore();
+
+    // speech bubble
+    if (cat.say && cat.act !== 0) {
+      ctx.font = "bold 12px Fredoka, Trebuchet MS, sans-serif";
+      var tw = ctx.measureText(cat.say).width + 14;
+      var bx = x + 16, by = y - 48;
+      ctx.fillStyle = "#fff8f2";
+      rr(bx, by, tw, 20, 8);
+      ctx.fill();
+      ctx.beginPath(); ctx.moveTo(bx + 6, by + 19); ctx.lineTo(bx + 2, by + 26); ctx.lineTo(bx + 13, by + 19); ctx.fill();
+      ctx.fillStyle = "#120a22";
+      ctx.fillText(cat.say, bx + 7, by + 14);
+    }
+  }
+
+  function drawBuilding(b, L) {
+    ctx.fillStyle = L.color;
+    ctx.fillRect(b.x, b.top, b.w, H - b.top);
+    for (var r = 0; r < 6; r++) {
+      for (var c = 0; b.x + 8 + c * 14 < b.x + b.w - 8; c++) {
+        if (H01(b.id * 100 + r * 7 + c) > 0.6) {
+          ctx.fillStyle = "rgba(255,209,102,.75)";
+          ctx.fillRect(b.x + 8 + c * 14, b.top + 12 + r * 16, 5, 7);
+        }
+      }
+    }
+    if (b.person) drawPerson(b, b.person);
+    if (b.sign) {
+      ctx.fillStyle = "#ff6fa5";
+      rr(b.x + 6, b.top + 4, b.w - 12, 20, 4);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 10px Fredoka, Trebuchet MS, sans-serif";
+      ctx.fillText(b.sign, b.x + 10, b.top + 17);
+    }
+    if (b.cat) drawCat(b.x + b.w * 0.6, b.top, b.cat);
+  }
+
+  // a cheerful window guy who cycles: waving, thumbs up, sunglasses
+  function drawPerson(b, p) {
+    var wx = b.x + 12 + p.col * 24, wy = b.top + 26 + p.row * 36;
+    var act = Math.floor((frame + p.bo) / 240) % 3;
+    ctx.save();
+    ctx.fillStyle = "#ffd6a0";
+    ctx.fillRect(wx, wy, 14, 18);
+    ctx.beginPath(); ctx.rect(wx, wy, 14, 18); ctx.clip();
+    ctx.fillStyle = "#0b0716";
+    ctx.beginPath(); ctx.arc(wx + 7, wy + 8, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(wx + 7, wy + 20, 7, 6, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "#0b0716";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(wx + 11, wy + 14);
+    if (act === 0) { // wave
+      ctx.lineTo(wx + 15, wy + 3 + Math.sin(frame * 0.2) * 2);
+    } else if (act === 1) { // thumbs up
+      ctx.lineTo(wx + 12, wy + 3);
+      ctx.stroke();
+      ctx.fillStyle = "#0b0716";
+      ctx.fillRect(wx + 11, wy + 1, 3, 3);
+      ctx.beginPath();
+    } else { // sunglasses
+      ctx.fillStyle = "#000";
+      ctx.fillRect(wx + 3, wy + 6, 8, 2.5);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function spawnBird() {
+    birds.push({ x: W + 30, y: R(H * 0.08, H * 0.38), sp: R(1.6, 3), ph: R(0, 6), say: Math.random() < 0.25 ? pick(BIRD_SAYS) : "" });
+  }
+
+  function drawBird(b) {
+    var f = Math.sin(b.ph) * 5;
+    ctx.fillStyle = "#0b0716";
+    ctx.beginPath(); ctx.ellipse(b.x, b.y, 9, 5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(b.x + 8, b.y - 1, 3.5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(b.x + 11, b.y - 1); ctx.lineTo(b.x + 16, b.y); ctx.lineTo(b.x + 11, b.y + 1); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(b.x, b.y);
+    ctx.quadraticCurveTo(b.x + 6, b.y - 6 - f, b.x + 16, b.y - 2 - f * 1.5);
+    ctx.quadraticCurveTo(b.x + 8, b.y + 1, b.x, b.y + 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(b.x - 2, b.y);
+    ctx.quadraticCurveTo(b.x - 8, b.y - 4 + f, b.x - 14, b.y - 1 + f * 1.2);
+    ctx.quadraticCurveTo(b.x - 6, b.y + 2, b.x - 2, b.y + 2);
+    ctx.fill();
+    if (b.say) {
+      ctx.fillStyle = "#fff8f2";
+      ctx.font = "bold 11px Fredoka, Trebuchet MS, sans-serif";
+      ctx.fillText(b.say, b.x - 10, b.y - 14);
+    }
+  }
+
+  // ---------- game ----------
+  function maxWidth() { return (score >= 0 && streakBig) ? BIG_MAX : BASE_MAX; }
+  var streakBig = false;
+
+  function spawn() {
+    var top = stack[stack.length - 1];
+    dir = top.x + top.w / 2 > W / 2 ? -1 : 1;
+    cur = { x: dir > 0 ? 0 : W - top.w, w: top.w, l: layerOf() };
+    camT = Math.max(0, stack.length - 7) * CH;
+  }
+
+  var DIFF = {
+    normal: { start: 2.6, inc: 0.22, max: 12, perfect: 7 },
+    easy:   { start: 2.2, inc: 0.15, max: 10, perfect: 9 },
+    hard:   { start: 4.1, inc: 0.4, max: 17, perfect: 5 }
+  };
+  var diff = "normal";
+  function setDiff(d) {
+    diff = d;
+    ["easy", "normal", "hard"].forEach(function (k) {
+      document.getElementById("d-" + k).classList.toggle("on", k === d);
+    });
+  }
+  function reset() {
+    startW = Math.min(W * 0.6, 220);
+    stack = [{ x: W / 2 - startW / 2, w: startW, l: layerOf() }];
+    fallers = []; parts = []; birds = []; birdT = 40;
+    score = 0; combo = 0; speed = DIFF[diff].start; PERFECT = DIFF[diff].perfect; streakBig = false;
+    cam = 0; camT = 0; shake = 0; popT = 0; popMsg = "";
+    state = "play";
+    scoreEl.textContent = "0";
+    comboEl.style.opacity = 0;
+    spawn();
+  }
+
+  function burst(x, y, color, n) {
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2, s = 1 + Math.random() * 4;
+      parts.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 2, life: 1, color: color });
+    }
+  }
+
+  function showCombo(text) {
+    comboEl.textContent = text;
+    comboEl.style.opacity = 1;
+  }
+
+  function drop() {
+    if (state !== "play" || !cur) return;
+    var top = stack[stack.length - 1];
+    var left = Math.max(cur.x, top.x);
+    var right = Math.min(cur.x + cur.w, top.x + top.w);
+    var overlap = right - left;
+    var y = blockY(stack.length);
+
+    if (!(overlap > 0)) {
+      fallers.push({ x: cur.x, y: y, w: cur.w, l: cur.l, vy: 0, vx: dir, big: streakBig });
+      gameOver();
+      return;
+    }
+
+    var nx = left, nw = overlap, big = false;
+    if (Math.abs(cur.x - top.x) < PERFECT) {
+      combo++;
+      nx = top.x;
+      nw = top.w;
+      if (combo >= STREAK) {
+        // streak: every perfect makes the cake a little bigger
+        nw = Math.min(maxWidth(), top.w + 10);
+        big = true;
+        if (!streakBig) {
+          streakBig = true;
+          popT = 40; popMsg = "BIG CAKE!";
+        }
+      } else if (combo % 3 === 0) {
+        nw = Math.min(BASE_MAX, top.w + 6);
+      }
+      burst(top.x + top.w / 2, y, cur.l.fc, 10 + Math.min(combo, 20));
+      shake = 3;
+      showCombo(combo >= 2 ? "PERFECT x" + combo : "PERFECT");
+    } else {
+      combo = 0;
+      streakBig = false;
+      comboEl.style.opacity = 0;
+      if (cur.x < top.x) fallers.push({ x: cur.x, y: y, w: top.x - cur.x, l: cur.l, vy: 0, vx: -1, big: false });
+      else if (cur.x + cur.w > top.x + top.w) fallers.push({ x: top.x + top.w, y: y, w: cur.x + cur.w - (top.x + top.w), l: cur.l, vy: 0, vx: 1, big: false });
+    }
+
+    stack.push({ x: nx, w: nw, l: cur.l, big: big });
+    score++;
+    scoreEl.textContent = String(score);
+    speed = Math.min(DIFF[diff].max, DIFF[diff].start + score * DIFF[diff].inc);
+    spawn();
+  }
+
+  function gameOver() {
+    state = "over";
+    cur = null;
+    shake = 10;
+    setTimeout(function () {
+      var isBest = score > best;
+      if (isBest) {
+        best = score;
+        try { localStorage.setItem("cakerush_best", String(best)); } catch (e) {}
+      }
+      msgEl.textContent = score === 0 ? "The first one slipped. Try again!" :
+        isBest ? "New best: " + score + " layers!" : "You stacked " + score + " layers.";
+      bestEl.textContent = "Best: " + best;
+      btn.textContent = "Play again";
+      overlay.classList.remove("hidden");
+    }, 700);
+  }
+
+  function update() {
+    frame++;
+    var bg = state === "play" ? 1 + Math.min(score, 80) * 0.02 : 0.5;
+
+    for (var li = 0; li < bgLayers.length; li++) {
+      var L = bgLayers[li];
+      for (var i = 0; i < L.list.length; i++) {
+        var b = L.list[i];
+        b.x -= L.sp * bg;
+        if (b.cat) {
+          var cat = b.cat;
+          if (cat.n === 0 && cat.act === 0 && cat.t > 0) cat.t--;
+          if (cat.t <= 0 && cat.n === 0) { catNextAct(cat); }
+          cat.n++;
+          if (cat.n >= ACT_LEN[cat.act]) {
+            cat.n = 0;
+            cat.t = R(60, 200);
+            cat.act = 0;
+            cat.say = "";
+          }
+        }
+      }
+      L.list = L.list.filter(function (bb) { return bb.x + bb.w > -60; });
+      fillLayer(L);
+    }
+
+    if (--birdT <= 0) { spawnBird(); birdT = R(90, 200); }
+    for (var bi = 0; bi < birds.length; bi++) { birds[bi].x -= birds[bi].sp * bg; birds[bi].ph += 0.25; }
+    birds = birds.filter(function (bb) { return bb.x > -40; });
+
+    if (state === "play" && cur) {
+      cur.x += dir * speed;
+      if (cur.x <= 0) { cur.x = 0; dir = 1; }
+      if (cur.x >= W - cur.w) { cur.x = W - cur.w; dir = -1; }
+    }
+    for (var fi2 = 0; fi2 < fallers.length; fi2++) {
+      var f = fallers[fi2];
+      f.vy += 0.9; f.y += f.vy; f.x += f.vx * 1.5;
+    }
+    fallers = fallers.filter(function (f) { return f.y < H + 100; });
+    for (var pi = 0; pi < parts.length; pi++) {
+      var p = parts[pi];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life -= 0.025;
+    }
+    parts = parts.filter(function (p) { return p.life > 0; });
+    cam += (camT - cam) * 0.12;
+    shake *= 0.85;
+    if (shake < 0.1) shake = 0;
+    if (popT > 0) popT--;
+  }
+
+  function drawSky() {
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#120a2e");
+    g.addColorStop(0.5, "#4a2170");
+    g.addColorStop(0.8, "#e8607a");
+    g.addColorStop(1, "#ffb36b");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(255,233,176,.9)";
+    ctx.beginPath(); ctx.arc(W * 0.8, H * 0.16, 26, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function draw() {
+    ctx.save();
+    if (shake) ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+    ctx.clearRect(-20, -20, W + 40, H + 40);
+    drawSky();
+
+    for (var a = 0; a < bgLayers[0].list.length; a++) drawBuilding(bgLayers[0].list[a], bgLayers[0]);
+    for (var b = 0; b < bgLayers[1].list.length; b++) drawBuilding(bgLayers[1].list[b], bgLayers[1]);
+    for (var bi = 0; bi < birds.length; bi++) drawBird(birds[bi]);
+
+    var pb = blockY(0);
+    rr(W / 2 - startW / 2 - 20, pb + CH - 8, startW + 40, 8, 4);
+    ctx.fillStyle = "#fff5f8";
+    ctx.fill();
+
+    for (var i = 0; i < stack.length; i++) {
+      var s = stack[i];
+      var y = blockY(i);
+      if (y > H + CH || y < -CH * 2) continue;
+      drawCake(s.x, y, s.w, s.l, s.big);
+    }
+    if (state === "play" && cur) drawCake(cur.x, blockY(stack.length), cur.w, cur.l, streakBig);
+    for (var fi3 = 0; fi3 < fallers.length; fi3++) {
+      var f = fallers[fi3];
+      drawCake(f.x, f.y, f.w, f.l, f.big);
+    }
+
+    for (var pi = 0; pi < parts.length; pi++) {
+      var p = parts[pi];
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    if (popT > 0) {
+      ctx.globalAlpha = Math.min(1, popT / 15);
+      ctx.fillStyle = "#ffd166";
+      ctx.font = "900 34px Fredoka, Trebuchet MS, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(popMsg, W / 2, H * 0.3);
+      ctx.textAlign = "left";
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+  }
+
+  function step() {
+    try {
+      update();
+      draw();
+    } catch (err) {
+      // never let one bad frame kill the game
+      if (window.console) console.warn(err);
+    }
+    window.requestAnimationFrame(step);
+  }
+
+  function start() {
+    overlay.classList.add("hidden");
+    reset();
+  }
+
+  function onTap(e) {
+    if (e && e.target === btn) return;
+    try { drop(); } catch (err) { if (window.console) console.warn(err); }
+  }
+
+  ["easy", "normal", "hard"].forEach(function (k) {
+    document.getElementById("d-" + k).addEventListener("click", function (e) { if (e) e.stopPropagation(); setDiff(k); });
+  });
+  setDiff("normal");
+  btn.addEventListener("click", start);
+  document.addEventListener("pointerdown", onTap);
+  window.addEventListener("keydown", function (e) {
+    if (e.code === "Space") { e.preventDefault(); onTap(null); }
+    else if (e.code === "Enter" && !overlay.classList.contains("hidden")) start();
+  });
+
+  initBg();
+  reset();
+  state = "idle";
+  cur = null;
+  overlay.classList.remove("hidden");
+  bestEl.textContent = best ? "Best: " + best : "";
+  step();
+})();
+</script>
+</body>
+</html>
